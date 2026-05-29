@@ -8,47 +8,19 @@ export default function Hero() {
 
   useEffect(() => {
     const section = sectionRef.current
-    const line1 = section.querySelector('.hero-line-1')
-    const line2 = section.querySelector('.hero-line-2')
-    const metadata = section.querySelectorAll('.hero-meta')
     
-    const tl = gsap.timeline({ delay: 0.2 })
-    
-    // Sharp typography intro
-    tl.fromTo(line1,
-      { y: 100, opacity: 0, clipPath: 'inset(100% 0 0 0)' },
-      { y: 0, opacity: 1, clipPath: 'inset(0% 0 0 0)', duration: 1, ease: 'power4.out' }
-    )
-    .fromTo(line2,
-      { y: 100, opacity: 0, clipPath: 'inset(100% 0 0 0)' },
-      { y: 0, opacity: 1, clipPath: 'inset(0% 0 0 0)', duration: 1, ease: 'power4.out' },
-      '-=0.8'
-    )
-    .fromTo(metadata,
-      { opacity: 0, x: -20 },
-      { opacity: 1, x: 0, stagger: 0.1, duration: 0.5 },
-      '-=0.5'
-    )
-
-    // Scroll parallax
-    const scrollTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1.5,
-      },
+    // We only pin the section. 
+    // We remove the GSAP opacity/scale tween because it conflicts with Framer Motion.
+    const st = ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',
+      end: 'bottom top',
+      pin: true,
+      pinSpacing: false
     })
 
-    scrollTl
-      .to(line1, { y: -150, opacity: 0, scale: 0.95 }, 0)
-      .to(line2, { y: -100, opacity: 0, scale: 0.95 }, 0)
-      .to(metadata, { opacity: 0, x: -50 }, 0)
-
     return () => {
-      tl.kill()
-      scrollTl.scrollTrigger?.kill()
-      scrollTl.kill()
+      st.kill()
     }
   }, [])
 
@@ -101,12 +73,17 @@ export default function Hero() {
           </motion.span>
         </h1>
 
-        <div className="hero-meta mt-12 max-w-sm">
+        <motion.div 
+          className="hero-meta mt-12 max-w-sm"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, delay: 0.6 }}
+        >
           <p className="text-sm font-mono tracking-widest text-white/60 border-l-2 border-nebula-cyan pl-4">
             INITIATING VOYAGE SEQUENCE...<br/>
             PLEASE SCROLL DOWN
           </p>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

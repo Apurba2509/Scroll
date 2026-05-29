@@ -197,13 +197,20 @@ function BlackHoleScene() {
   })
   return (
     <group>
+      {/* Event Horizon */}
       <mesh>
         <sphereGeometry args={[0.5, 32, 32]} />
         <meshBasicMaterial color="#000000" />
       </mesh>
-      <mesh ref={ref} rotation={[Math.PI/2.5, 0, 0]}>
-        <torusGeometry args={[1, 0.05, 16, 100]} />
-        <meshBasicMaterial color="#ffffff" wireframe />
+      {/* Glowing Accretion Disk */}
+      <mesh ref={ref} rotation={[Math.PI / 2.2, 0, 0]}>
+        <ringGeometry args={[0.7, 1.5, 64]} />
+        <meshBasicMaterial color="#ffffff" side={THREE.DoubleSide} transparent opacity={0.8} />
+      </mesh>
+      {/* Light bending sphere (simulated with wireframe sphere slightly larger) */}
+      <mesh>
+        <sphereGeometry args={[0.6, 32, 32]} />
+        <meshBasicMaterial color="#ffffff" wireframe transparent opacity={0.1} />
       </mesh>
     </group>
   )
@@ -242,19 +249,19 @@ function ExoplanetScene() {
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime()
     if (ref1.current) {
-      ref1.current.position.x = Math.cos(t) * 1.5
-      ref1.current.position.z = Math.sin(t) * 1.5
+      ref1.current.position.x = Math.cos(t) * 2
+      ref1.current.position.z = Math.sin(t) * 2
     }
     if (ref2.current) {
-      ref2.current.position.x = Math.cos(t * 1.5 + Math.PI) * 1
-      ref2.current.position.y = Math.sin(t * 1.5 + Math.PI) * 1
+      ref2.current.position.x = Math.cos(t * 1.5 + Math.PI) * 1.2
+      ref2.current.position.z = Math.sin(t * 1.5 + Math.PI) * 1.2
     }
   })
   return (
-    <group>
-      <mesh><sphereGeometry args={[0.6, 16, 16]}/><meshBasicMaterial color="#ff0055" wireframe/></mesh>
-      <mesh ref={ref1}><sphereGeometry args={[0.2, 8, 8]}/><meshBasicMaterial color="#ffffff" wireframe/></mesh>
-      <mesh ref={ref2}><sphereGeometry args={[0.1, 8, 8]}/><meshBasicMaterial color="#00e5ff" wireframe/></mesh>
+    <group rotation={[Math.PI / 6, 0, 0]}>
+      <mesh><sphereGeometry args={[0.8, 32, 32]}/><meshBasicMaterial color="#ff0055" wireframe/></mesh>
+      <mesh ref={ref1}><sphereGeometry args={[0.3, 16, 16]}/><meshBasicMaterial color="#ffffff" /></mesh>
+      <mesh ref={ref2}><sphereGeometry args={[0.15, 16, 16]}/><meshBasicMaterial color="#00e5ff" /></mesh>
     </group>
   )
 }
@@ -263,17 +270,20 @@ function WebbScene() {
   const ref = useRef()
   useFrame(({ clock }) => {
     if (ref.current) {
-      ref.current.rotation.x = Math.sin(clock.getElapsedTime() * 0.5) * 0.2
-      ref.current.rotation.y = clock.getElapsedTime() * 0.1
+      ref.current.rotation.y = Math.sin(clock.getElapsedTime() * 0.5) * 0.2
+      ref.current.rotation.x = clock.getElapsedTime() * 0.1
     }
   })
   return (
     <group ref={ref}>
       {Array.from({ length: 18 }).map((_, i) => {
-        const row = Math.floor(i / 5)
-        const col = i % 5
+        // Honeycomb grid calculation
+        const row = Math.floor(i / 5) - 1
+        const col = (i % 5) - 2
+        // Offset rows for hex grid packing
+        const xOffset = row % 2 !== 0 ? 0.25 : 0
         return (
-          <mesh key={i} position={[(col - 2) * 0.45, (row - 1.5) * 0.4, 0]} rotation={[0,0,Math.PI/2]}>
+          <mesh key={i} position={[(col * 0.5) + xOffset, row * 0.45, 0]} rotation={[Math.PI / 2, 0, 0]}>
             <cylinderGeometry args={[0.25, 0.25, 0.05, 6]} />
             <meshBasicMaterial color="#d4af37" wireframe />
           </mesh>
@@ -283,14 +293,12 @@ function WebbScene() {
   )
 }
 
-// Global Camera Controller
 function CameraController() {
   useFrame((state) => {
-    // Scroll progress maps to X position. 
-    // Gap between scenes is 10 units. Total width is (ITEMS.length - 1) * 10
+    // Scroll progress perfectly synced to X position without lerp delay
     const targetX = scrollState.progress * (ITEMS.length - 1) * 10
-    state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, targetX, 0.1)
-    state.camera.lookAt(state.camera.position.x, 0, 0)
+    state.camera.position.x = targetX
+    state.camera.lookAt(targetX, 0, 0)
   })
   return null
 }
