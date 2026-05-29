@@ -6,49 +6,66 @@ import { motion } from 'framer-motion'
 import gsap from 'gsap'
 
 const PLANETS = [
-  { id: '01', name: 'MERCURY', desc: 'SCORCHED CRATERED WORLD. 88-DAY ORBIT.', stat: '430°C PEAK', color: '#8a7d6b', moons: 0, hasRing: false, radius: 0.8 },
-  { id: '02', name: 'VENUS', desc: 'CRUSHING PRESSURE. ACID CLOUDS.', stat: 'TOXIC ATMOSPHERE', color: '#e65100', moons: 0, hasRing: false, radius: 1.1 },
-  { id: '03', name: 'EARTH', desc: 'PALE BLUE DOT. ONLY KNOWN HARBOR OF LIFE.', stat: '7.9B HUMANS', color: '#27ae60', moons: 1, hasRing: false, radius: 1.2 },
-  { id: '04', name: 'MARS', desc: 'THE RED PLANET. HOME TO OLYMPUS MONS.', stat: '72,000 FT VOLCANO', color: '#c0392b', moons: 2, hasRing: false, radius: 0.9 },
-  { id: '05', name: 'JUPITER', desc: 'GAS GIANT. IMMENSE GRAVITY WELL.', stat: '350YR STORM', color: '#d4a24e', moons: 4, hasRing: true, radius: 2.2 },
-  { id: '06', name: 'SATURN', desc: 'JEWEL OF THE SYSTEM. BILLIONS OF ICE PARTICLES.', stat: 'LOW DENSITY', color: '#daa520', moons: 7, hasRing: true, radius: 1.8 },
-  { id: '07', name: 'URANUS', desc: 'THE SIDEWAYS PLANET. 98° TILT.', stat: 'ICE GIANT', color: '#26c6da', moons: 5, hasRing: true, radius: 1.5 },
-  { id: '08', name: 'NEPTUNE', desc: 'EDGE ICE GIANT. 2,100 KM/H WINDS.', stat: '165YR ORBIT', color: '#1565c0', moons: 3, hasRing: true, radius: 1.5 },
+  { id: '01', name: 'MERCURY', desc: 'SCORCHED CRATERED WORLD. 88-DAY ORBIT.', stat: '430°C PEAK', color: '#8a7d6b', moons: 0, hasRing: false, radius: 0.4 },
+  { id: '02', name: 'VENUS', desc: 'CRUSHING PRESSURE. ACID CLOUDS.', stat: 'TOXIC ATMOSPHERE', color: '#e65100', moons: 0, hasRing: false, radius: 0.6 },
+  { id: '03', name: 'EARTH', desc: 'PALE BLUE DOT. ONLY KNOWN HARBOR OF LIFE.', stat: '7.9B HUMANS', color: '#27ae60', moons: 1, hasRing: false, radius: 0.6 },
+  { id: '04', name: 'MARS', desc: 'THE RED PLANET. HOME TO OLYMPUS MONS.', stat: '72,000 FT VOLCANO', color: '#c0392b', moons: 2, hasRing: false, radius: 0.5 },
+  { id: '05', name: 'JUPITER', desc: 'GAS GIANT. IMMENSE GRAVITY WELL.', stat: '350YR STORM', color: '#d4a24e', moons: 4, hasRing: true, radius: 1.2 },
+  { id: '06', name: 'SATURN', desc: 'JEWEL OF THE SYSTEM. BILLIONS OF ICE PARTICLES.', stat: 'LOW DENSITY', color: '#daa520', moons: 7, hasRing: true, radius: 1.0 },
+  { id: '07', name: 'URANUS', desc: 'THE SIDEWAYS PLANET. 98° TILT.', stat: 'ICE GIANT', color: '#26c6da', moons: 5, hasRing: true, radius: 0.8 },
+  { id: '08', name: 'NEPTUNE', desc: 'EDGE ICE GIANT. 2,100 KM/H WINDS.', stat: '165YR ORBIT', color: '#1565c0', moons: 3, hasRing: true, radius: 0.8 },
 ]
 
 const SPACING = 15
 const scrollState = { progress: 0 }
 
 function Planet3D({ data }) {
-  const meshRef = useRef()
+  const pointsRef = useRef()
+  const wireRef = useRef()
   
   useFrame(({ clock }) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = clock.getElapsedTime() * 0.1
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y = clock.getElapsedTime() * 0.15
+    }
+    if (wireRef.current) {
+      wireRef.current.rotation.y = -clock.getElapsedTime() * 0.05
+      wireRef.current.rotation.x = clock.getElapsedTime() * 0.05
     }
   })
 
   return (
     <group>
-      <mesh ref={meshRef}>
-        <sphereGeometry args={[data.radius, 32, 32]} />
-        <meshStandardMaterial 
-          color={data.color} 
-          wireframe={false}
-          roughness={0.7}
-          metalness={0.2}
-          emissive={data.color}
-          emissiveIntensity={0.2}
-        />
-        
-        {/* Brutalist Wireframe Overlay */}
-        <mesh>
-          <sphereGeometry args={[data.radius + 0.02, 16, 16]} />
-          <meshBasicMaterial color={data.color} wireframe transparent opacity={0.5} />
-        </mesh>
+      {/* Dark inner core to block stars behind it */}
+      <mesh>
+        <sphereGeometry args={[data.radius * 0.98, 32, 32]} />
+        <meshBasicMaterial color="#020010" />
       </mesh>
 
-      {/* Interactive OrbitControls per planet */}
+      {/* Holographic Particle Cloud */}
+      <points ref={pointsRef}>
+        <sphereGeometry args={[data.radius, 64, 64]} />
+        <pointsMaterial 
+          color={data.color} 
+          size={0.02} 
+          sizeAttenuation={true} 
+          transparent 
+          opacity={0.9} 
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
+
+      {/* Sparse Outer Wireframe Grid */}
+      <mesh ref={wireRef}>
+        <sphereGeometry args={[data.radius * 1.15, 12, 12]} />
+        <meshBasicMaterial 
+          color={data.color} 
+          wireframe 
+          transparent 
+          opacity={0.15} 
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
       <OrbitControls 
         enableZoom={false} 
         enablePan={false} 
@@ -56,15 +73,16 @@ function Planet3D({ data }) {
       />
 
       {data.hasRing && (
-        <mesh rotation={[Math.PI / 2.5, 0, 0]}>
-          <ringGeometry args={[data.radius * 1.4, data.radius * 2.2, 64]} />
-          <meshBasicMaterial color={data.color} side={THREE.DoubleSide} transparent opacity={0.4} />
-          {/* Inner ring */}
-          <mesh rotation={[0, 0, 0]}>
-             <ringGeometry args={[data.radius * 1.5, data.radius * 1.6, 64]} />
-             <meshBasicMaterial color="#ffffff" side={THREE.DoubleSide} transparent opacity={0.8} />
-          </mesh>
-        </mesh>
+        <points rotation={[Math.PI / 2.5, 0, 0]}>
+          <ringGeometry args={[data.radius * 1.5, data.radius * 2.5, 128, 8]} />
+          <pointsMaterial 
+            color={data.color} 
+            size={0.015} 
+            transparent 
+            opacity={0.6} 
+            blending={THREE.AdditiveBlending}
+          />
+        </points>
       )}
 
       {/* Moons */}
@@ -138,6 +156,11 @@ export default function PlanetSection() {
         pin: true,
         anticipatePin: 1,
         scrub: 1,
+        snap: {
+          snapTo: 1 / PLANETS.length,
+          duration: { min: 0.2, max: 0.6 },
+          ease: 'power2.inOut'
+        },
         onUpdate: (self) => {
           scrollState.progress = self.progress
         }

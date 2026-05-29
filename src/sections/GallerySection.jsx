@@ -321,6 +321,11 @@ export default function GallerySection() {
         pin: true,
         anticipatePin: 1,
         scrub: 1,
+        snap: {
+          snapTo: 1 / (ITEMS.length + 1),
+          duration: { min: 0.2, max: 0.6 },
+          ease: 'power2.inOut'
+        },
         onUpdate: (self) => {
           scrollState.progress = self.progress
         }
