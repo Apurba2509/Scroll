@@ -125,7 +125,7 @@ export default function PlanetSection() {
 
       <div
         ref={trackRef}
-        className="flex items-center will-change-transform"
+        className="flex flex-nowrap items-center will-change-transform"
         style={{ width: 'max-content' }}
       >
         {/* Intro */}
