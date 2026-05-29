@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { motion } from 'framer-motion'
 
 export default function FinaleSection({ onRestart }) {
   const sectionRef = useRef(null)
@@ -58,17 +59,25 @@ export default function FinaleSection({ onRestart }) {
       style={{ background: '#000000' }}
     >
       <div className="relative z-10 w-full max-w-7xl px-8 flex flex-col items-center">
-        
-        <div className="finale-badge mb-12 border border-white/30 px-6 py-2 tech-panel">
-          <span className="font-mono text-xs tracking-widest uppercase text-white">
-            SYS.HALT // END OF TRANSMISSION
-          </span>
-        </div>
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0, scale: 0.8, filter: 'blur(20px)' }}
+          whileInView={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+          transition={{ duration: 1, type: 'spring', bounce: 0.4 }}
+          viewport={{ once: false, amount: 0.5 }}
+        >
+          <div className="inline-block border border-red-500/50 bg-red-500/10 px-6 py-2 mb-8">
+            <span className="text-red-500 font-mono text-sm tracking-widest uppercase">
+              SYS.HALT // END OF TRANSMISSION
+            </span>
+          </div>
 
-        <h2 className="finale-title text-[clamp(3rem,10vw,9rem)] font-black leading-none tracking-tighter uppercase text-center w-full border-y border-white/20 py-8">
-          <span className="block text-white">THE JOURNEY</span>
-          <span className="block text-transparent" style={{ WebkitTextStroke: '2px white' }}>NEVER ENDS</span>
-        </h2>
+          <h2 className="finale-text text-[clamp(2.5rem,8vw,7rem)] font-black uppercase leading-none tracking-tighter text-white">
+            THE VOID
+            <br />
+            <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>AWAITS</span>
+          </h2>
+        </motion.div>
 
         <div className="w-full flex flex-col md:flex-row justify-between items-center mt-12 gap-8 border-b border-white/20 pb-12">
           <p className="finale-sub font-mono text-xs md:text-sm text-white/60 max-w-md leading-relaxed uppercase">

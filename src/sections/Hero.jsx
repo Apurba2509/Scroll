@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { motion } from 'framer-motion'
 
 export default function Hero() {
   const sectionRef = useRef(null)
@@ -80,13 +81,24 @@ export default function Hero() {
       </div>
 
       <div className="z-10 w-full max-w-7xl mx-auto md:ml-32">
-        <h1 className="flex flex-col gap-0 uppercase">
-          <span className="hero-line-1 block text-[clamp(4rem,15vw,14rem)] font-black tracking-tighter leading-[0.8] text-white">
+        <h1 className="text-[clamp(3.5rem,12vw,12rem)] font-black uppercase tracking-tighter leading-[0.85]">
+          <motion.span 
+            className="hero-line-1 block text-white"
+            initial={{ y: 100, opacity: 0, rotateX: 90 }}
+            animate={{ y: 0, opacity: 1, rotateX: 0 }}
+            transition={{ type: 'spring', bounce: 0.6, duration: 1.5, delay: 0.2 }}
+          >
             COSMIC
-          </span>
-          <span className="hero-line-2 block text-[clamp(4rem,15vw,14rem)] font-black tracking-tighter leading-[0.8] text-transparent" style={{ WebkitTextStroke: '2px white' }}>
+          </motion.span>
+          <motion.span 
+            className="hero-line-2 block text-transparent" 
+            style={{ WebkitTextStroke: '2px white' }}
+            initial={{ y: 100, opacity: 0, rotateX: -90 }}
+            animate={{ y: 0, opacity: 1, rotateX: 0 }}
+            transition={{ type: 'spring', bounce: 0.6, duration: 1.5, delay: 0.4 }}
+          >
             SCROLL
-          </span>
+          </motion.span>
         </h1>
 
         <div className="hero-meta mt-12 max-w-sm">
