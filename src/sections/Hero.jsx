@@ -28,7 +28,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 tech-grid-bg"
-      style={{ background: '#000000' }}
+      
     >
       {/* Corner crosshairs */}
       <div className="absolute top-8 left-8 w-8 h-8 border-t border-left border-white/30" />
@@ -52,8 +52,8 @@ export default function Hero() {
         </div>
       </div>
 
-      <div className="z-10 w-full max-w-7xl mx-auto md:ml-32">
-        <h1 className="text-[clamp(3.5rem,12vw,12rem)] font-black uppercase tracking-tighter leading-[0.85]">
+      <div className="z-10 w-full max-w-7xl mx-auto md:ml-32 px-4">
+        <h1 className="text-[clamp(2.5rem,12vw,12rem)] font-black uppercase tracking-tighter leading-[0.85] whitespace-nowrap">
           <motion.span 
             className="hero-line-1 block text-white"
             initial={{ y: 100, opacity: 0, rotateX: 90 }}

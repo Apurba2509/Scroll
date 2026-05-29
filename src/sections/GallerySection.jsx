@@ -334,7 +334,7 @@ export default function GallerySection() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative h-screen overflow-hidden bg-black tech-grid-bg">
+    <section ref={sectionRef} className="relative h-screen overflow-hidden bg-transparent tech-grid-bg">
       
       {/* 3D WebGL Background Layer */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -360,8 +360,8 @@ export default function GallerySection() {
 
       <div
         ref={trackRef}
-        className="flex items-center h-full will-change-transform z-10 relative"
-        style={{ width: 'max-content' }}
+        className="flex items-center h-full will-change-transform z-10 relative flex-nowrap"
+        style={{ width: `${(ITEMS.length + 2) * 100}vw` }}
       >
         <div className="w-screen h-screen shrink-0 border-r border-white/20 pointer-events-none" />
 
@@ -388,7 +388,7 @@ export default function GallerySection() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               viewport={{ once: false, amount: 0.5 }}
-              className="border-l-4 border-nebula-cyan pl-6 mb-16 max-w-lg bg-black/50 backdrop-blur-md p-4"
+              className="border-l-4 border-nebula-cyan pl-6 mb-16 max-w-lg bg-transparent/50 backdrop-blur-md p-4"
             >
               <span className="text-[10px] font-mono text-white/40 block mb-2">ENTRY_{item.id} // WEBGL_ACTIVE</span>
               <p className="text-sm font-mono text-white uppercase tracking-widest leading-relaxed">

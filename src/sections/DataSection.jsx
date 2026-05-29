@@ -100,7 +100,7 @@ export default function DataSection() {
     <section
       ref={sectionRef}
       className="relative min-h-screen flex flex-col items-center justify-center py-32 px-4 tech-grid-bg"
-      style={{ background: '#000000' }}
+      
     >
       <div className="absolute top-8 left-8">
         <p className="text-xs font-mono text-nebula-cyan uppercase tracking-widest">

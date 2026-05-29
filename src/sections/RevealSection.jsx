@@ -16,7 +16,7 @@ export default function RevealSection() {
     <section
       ref={sectionRef}
       className="relative min-h-screen py-32 flex flex-col items-center justify-center tech-grid-bg border-y border-white/20"
-      style={{ background: '#000000' }}
+      
     >
       <div className="absolute top-8 left-8 border-l border-white/30 pl-3">
         <p className="text-[10px] tracking-widest text-white/50 uppercase font-mono mb-1">

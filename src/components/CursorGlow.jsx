@@ -1,49 +1,69 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
+import { motion, useMotionValue, useSpring } from 'framer-motion'
 
 export default function CursorGlow() {
-  const dotRef = useRef(null)
-  const ringRef = useRef(null)
-  const mouse = useRef({ x: 0, y: 0 })
-  const pos = useRef({ dot: { x: 0, y: 0 }, ring: { x: 0, y: 0 } })
+  const [isVisible, setIsVisible] = useState(false)
+  
+  const cursorX = useMotionValue(-100)
+  const cursorY = useMotionValue(-100)
+  
+  // Spring configurations for super smooth tracking
+  const springConfig = { damping: 25, stiffness: 400, mass: 0.5 }
+  const mouseX = useSpring(cursorX, springConfig)
+  const mouseY = useSpring(cursorY, springConfig)
+
+  // Slower spring for the outer targeting reticle
+  const reticleX = useSpring(cursorX, { damping: 30, stiffness: 200, mass: 1 })
+  const reticleY = useSpring(cursorY, { damping: 30, stiffness: 200, mass: 1 })
 
   useEffect(() => {
-    const onMove = (e) => {
-      mouse.current.x = e.clientX
-      mouse.current.y = e.clientY
+    const moveCursor = (e) => {
+      cursorX.set(e.clientX)
+      cursorY.set(e.clientY)
     }
-    window.addEventListener('mousemove', onMove)
+    const handleMouseEnter = () => setIsVisible(true)
+    const handleMouseLeave = () => setIsVisible(false)
 
-    let raf
-    const animate = () => {
-      // Dot follows tightly
-      pos.current.dot.x += (mouse.current.x - pos.current.dot.x) * 0.25
-      pos.current.dot.y += (mouse.current.y - pos.current.dot.y) * 0.25
-      // Ring follows loosely
-      pos.current.ring.x += (mouse.current.x - pos.current.ring.x) * 0.1
-      pos.current.ring.y += (mouse.current.y - pos.current.ring.y) * 0.1
-
-      if (dotRef.current) {
-        dotRef.current.style.left = pos.current.dot.x + 'px'
-        dotRef.current.style.top = pos.current.dot.y + 'px'
-      }
-      if (ringRef.current) {
-        ringRef.current.style.left = pos.current.ring.x + 'px'
-        ringRef.current.style.top = pos.current.ring.y + 'px'
-      }
-      raf = requestAnimationFrame(animate)
+    // Only show custom cursor on non-touch devices
+    if (window.matchMedia('(pointer: fine)').matches) {
+      window.addEventListener('mousemove', moveCursor)
+      window.addEventListener('mouseenter', handleMouseEnter)
+      window.addEventListener('mouseleave', handleMouseLeave)
+      setIsVisible(true)
     }
-    animate()
 
     return () => {
-      window.removeEventListener('mousemove', onMove)
-      cancelAnimationFrame(raf)
+      window.removeEventListener('mousemove', moveCursor)
+      window.removeEventListener('mouseenter', handleMouseEnter)
+      window.removeEventListener('mouseleave', handleMouseLeave)
     }
-  }, [])
+  }, [cursorX, cursorY])
+
+  if (!isVisible) return null
 
   return (
-    <>
-      <div ref={dotRef} className="cursor-dot" />
-      <div ref={ringRef} className="cursor-ring" />
-    </>
+    <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden mix-blend-difference">
+      {/* Center sharp dot */}
+      <motion.div
+        className="absolute w-1.5 h-1.5 bg-white rounded-full translate-x-[-50%] translate-y-[-50%]"
+        style={{ x: mouseX, y: mouseY }}
+      />
+      
+      {/* Brutalist targeting reticle */}
+      <motion.div
+        className="absolute w-12 h-12 border border-white/40 translate-x-[-50%] translate-y-[-50%] flex items-center justify-center"
+        style={{ x: reticleX, y: reticleY }}
+      >
+        {/* Crosshair lines */}
+        <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-white/30 h-full" />
+        <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-white/30 w-full" />
+        
+        {/* Corner ticks */}
+        <div className="absolute top-[-4px] left-[-4px] w-2 h-2 border-t border-l border-white" />
+        <div className="absolute top-[-4px] right-[-4px] w-2 h-2 border-t border-right border-white" />
+        <div className="absolute bottom-[-4px] left-[-4px] w-2 h-2 border-b border-l border-white" />
+        <div className="absolute bottom-[-4px] right-[-4px] w-2 h-2 border-b border-right border-white" />
+      </motion.div>
+    </div>
   )
 }

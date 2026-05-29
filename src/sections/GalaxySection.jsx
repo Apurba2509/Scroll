@@ -136,7 +136,7 @@ export default function GalaxySection() {
     <section
       ref={sectionRef}
       className="relative min-h-screen flex flex-col items-center justify-center py-32 tech-grid-bg border-y border-white/20"
-      style={{ background: '#000000' }}
+      
     >
       <div className="absolute top-8 left-8 border-l border-white/30 pl-3">
         <p className="text-[10px] font-mono text-white/50 tracking-widest uppercase mb-1">SYS.LOC</p>

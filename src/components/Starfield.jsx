@@ -6,14 +6,14 @@ import * as THREE from 'three'
 function StarParticles() {
   const ref = useRef()
   
-  // Create 5000 stars in a massive 3D volume
+  // Create 15000 stars in a massive 3D volume
   const sphere = useMemo(() => {
-    const p = new Float32Array(5000 * 3)
-    for (let i = 0; i < 5000; i++) {
-      // Random position in a large cube
-      p[i * 3] = (Math.random() - 0.5) * 100
-      p[i * 3 + 1] = (Math.random() - 0.5) * 100
-      p[i * 3 + 2] = (Math.random() - 0.5) * 100
+    const p = new Float32Array(15000 * 3)
+    for (let i = 0; i < 15000; i++) {
+      // Random position in a larger cube
+      p[i * 3] = (Math.random() - 0.5) * 200
+      p[i * 3 + 1] = (Math.random() - 0.5) * 200
+      p[i * 3 + 2] = (Math.random() - 0.5) * 200
     }
     return p
   }, [])
@@ -41,10 +41,10 @@ function StarParticles() {
         <PointMaterial 
           transparent 
           color="#ffffff" 
-          size={0.1} 
+          size={0.15} 
           sizeAttenuation={true} 
           depthWrite={false}
-          opacity={0.6}
+          opacity={0.8}
         />
       </Points>
     </group>
@@ -63,7 +63,7 @@ export default function Starfield() {
   return (
     <div className="fixed inset-0 z-[-1] bg-black pointer-events-none">
       <Canvas camera={{ position: [0, 0, 10], fov: 60 }}>
-        <fog attach="fog" args={['#000000', 5, 30]} />
+        <fog attach="fog" args={['#000000', 50, 200]} />
         <StarParticles />
       </Canvas>
     </div>

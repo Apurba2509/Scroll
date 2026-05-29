@@ -134,9 +134,9 @@ export default function WarpSection() {
 
         <div
           ref={headingRef}
-          className="absolute inset-0 flex flex-col items-center justify-center z-10 mix-blend-difference"
+          className="absolute inset-0 flex flex-col items-center justify-center z-10 mix-blend-difference px-4"
         >
-          <h2 className="text-[clamp(3rem,10vw,10rem)] font-black leading-none tracking-tighter text-center uppercase">
+          <h2 className="text-[clamp(2rem,8vw,10rem)] font-black leading-none tracking-tighter text-center uppercase whitespace-nowrap">
             <span className="block text-white">{splitText('ACCELERATE')}</span>
             <span className="block text-transparent mt-[-0.1em]" style={{ WebkitTextStroke: '2px white' }}>
               {splitText('BEYOND')}

@@ -56,7 +56,7 @@ export default function FinaleSection({ onRestart }) {
     <section
       ref={sectionRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden tech-grid-bg border-t border-white/20"
-      style={{ background: '#000000' }}
+      
     >
       <div className="relative z-10 w-full max-w-7xl px-8 flex flex-col items-center">
         <motion.div 

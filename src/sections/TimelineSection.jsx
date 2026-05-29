@@ -85,7 +85,7 @@ export default function TimelineSection() {
     <section
       ref={sectionRef}
       className="relative py-32 px-4 tech-grid-bg border-t border-white/20"
-      style={{ background: '#000000' }}
+      
     >
       <div className="text-center mb-32 border-b border-white/20 pb-8 max-w-6xl mx-auto">
         <p className="text-[10px] font-mono tracking-widest uppercase text-white/50 mb-2">
@@ -114,7 +114,7 @@ export default function TimelineSection() {
                 <div className={`absolute top-1/2 ${isLeft ? 'right-1/2 left-[25%]' : 'left-1/2 right-[25%]'} h-[1px] bg-white/20 -translate-y-1/2 z-0`} />
 
                 <div className={`timeline-card w-1/2 flex items-center ${isLeft ? 'justify-end pr-16' : 'justify-start pl-16'} z-10`}>
-                  <div className={`tech-panel p-8 w-full max-w-md ${isLeft ? 'border-r-4 border-r-white' : 'border-l-4 border-l-white'} bg-black`}>
+                  <div className={`tech-panel p-8 w-full max-w-md ${isLeft ? 'border-r-4 border-r-white' : 'border-l-4 border-l-white'} bg-transparent`}>
                     <span className="timeline-year font-mono text-white text-sm tracking-widest uppercase block mb-4 border-b border-white/20 pb-2">
                       T-MINUS // {event.year}
                     </span>
@@ -125,7 +125,7 @@ export default function TimelineSection() {
 
                 {/* Center marker */}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-20">
-                  <div className="timeline-dot w-6 h-6 border-2 border-white bg-black transform rotate-45" />
+                  <div className="timeline-dot w-6 h-6 border-2 border-white bg-transparent transform rotate-45" />
                 </div>
               </div>
             )

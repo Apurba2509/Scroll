@@ -101,7 +101,7 @@ export default function ConstellationSection() {
 
       // Draw SVG lines (brutalist strict drawing)
       const lines = card.querySelectorAll('line')
-      const stars = card.querySelectorAll('circle')
+      const stars = card.querySelectorAll('rect')
       
       lines.forEach((line) => {
         const length = line.getTotalLength ? line.getTotalLength() : 200
@@ -146,7 +146,7 @@ export default function ConstellationSection() {
     <section
       ref={sectionRef}
       className="relative min-h-screen py-32 px-4 tech-grid-bg border-t border-white/20"
-      style={{ background: '#000000' }}
+      
     >
       <div className="absolute top-8 left-8 border-l border-white/30 pl-3">
         <p className="text-[10px] tracking-widest text-white/50 uppercase font-mono mb-1">
