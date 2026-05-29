@@ -1,0 +1,329 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap');
+
+@theme {
+  --color-void: #020010;
+  --color-abyss: #06001a;
+  --color-deep: #0a0025;
+  --color-nebula-blue: #4fc3f7;
+  --color-nebula-purple: #b388ff;
+  --color-nebula-pink: #ff80ab;
+  --color-nebula-orange: #ffab40;
+  --color-nebula-cyan: #00e5ff;
+  --color-nebula-green: #69f0ae;
+  --color-star-white: #e8e6f0;
+  --color-dust: #9e9ab5;
+  --color-glass: rgba(255, 255, 255, 0.04);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
+  --color-glass-hover: rgba(255, 255, 255, 0.08);
+
+  --font-display: 'Syne', 'Outfit', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+/* ── Base ─────────────────────────────────────────── */
+html { scroll-behavior: auto; }
+body {
+  font-family: var(--font-body);
+  background: var(--color-void);
+  color: var(--color-star-white);
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--color-void); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-nebula-blue), var(--color-nebula-purple));
+  border-radius: 99px;
+}
+
+/* ── Loader ───────────────────────────────────────── */
+.loader-wrap {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--color-void);
+  transition: opacity 1s cubic-bezier(.4,0,.2,1), visibility 1s;
+}
+.loader-wrap.done { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-orbit {
+  width: 64px; height: 64px; position: relative;
+}
+.loader-orbit span {
+  position: absolute; inset: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+}
+.loader-orbit span:nth-child(1) {
+  border-top-color: var(--color-nebula-cyan);
+  animation: loaderSpin 1s linear infinite;
+}
+.loader-orbit span:nth-child(2) {
+  border-right-color: var(--color-nebula-purple);
+  animation: loaderSpin 1.5s linear infinite reverse;
+  inset: 6px;
+}
+.loader-orbit span:nth-child(3) {
+  border-bottom-color: var(--color-nebula-pink);
+  animation: loaderSpin 2s linear infinite;
+  inset: 12px;
+}
+@keyframes loaderSpin { to { transform: rotate(360deg); } }
+
+/* ── Cursor ───────────────────────────────────────── */
+.cursor-dot {
+  position: fixed; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--color-nebula-cyan);
+  pointer-events: none; z-index: 10001;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed; width: 40px; height: 40px; border-radius: 50%;
+  border: 1.5px solid rgba(79,195,247,0.4);
+  pointer-events: none; z-index: 10000;
+  transform: translate(-50%, -50%);
+  transition: width .3s, height .3s, border-color .3s;
+}
+@media (pointer: coarse) { .cursor-dot, .cursor-ring { display: none; } }
+
+/* ── Progress ─────────────────────────────────────── */
+.scroll-progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--color-nebula-cyan), var(--color-nebula-blue), var(--color-nebula-purple), var(--color-nebula-pink));
+  z-index: 9998;
+}
+
+/* ── Starfield canvas ─────────────────────────────── */
+.starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* ── Gradient text helpers ────────────────────────── */
+.text-grad-blue {
+  background: linear-gradient(135deg, var(--color-nebula-cyan), var(--color-nebula-blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.text-grad-purple {
+  background: linear-gradient(135deg, var(--color-nebula-purple), var(--color-nebula-pink));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.text-grad-rainbow {
+  background: linear-gradient(135deg, var(--color-nebula-cyan), var(--color-nebula-blue), var(--color-nebula-purple), var(--color-nebula-pink));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.text-grad-warm {
+  background: linear-gradient(135deg, var(--color-nebula-orange), var(--color-nebula-pink), var(--color-nebula-purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.text-grad-cosmic {
+  background: linear-gradient(90deg, var(--color-nebula-green), var(--color-nebula-cyan), var(--color-nebula-blue), var(--color-nebula-purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* ── Brutalist Tech Panels ───────────────────────── */
+.tech-panel {
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+}
+.tech-panel::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 10px; height: 10px;
+  border-top: 1px solid var(--color-nebula-cyan);
+  border-left: 1px solid var(--color-nebula-cyan);
+}
+.tech-panel::after {
+  content: ''; position: absolute; bottom: 0; right: 0;
+  width: 10px; height: 10px;
+  border-bottom: 1px solid var(--color-nebula-cyan);
+  border-right: 1px solid var(--color-nebula-cyan);
+}
+.tech-panel:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Grid Background ──────────────────────────────── */
+.tech-grid-bg {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+}
+
+/* ── Planet base ──────────────────────────────────── */
+.planet {
+  border-radius: 50%; flex-shrink: 0; position: relative;
+  animation: planetBob 7s ease-in-out infinite;
+}
+@keyframes planetBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.planet-mercury {
+  background: radial-gradient(circle at 28% 28%, #e0d5c1, #c9b99a, #8a7d6b, #4a4038);
+  box-shadow: inset -25px -15px 40px rgba(0,0,0,.6), 0 0 50px rgba(201,185,154,.12);
+}
+.planet-venus {
+  background: radial-gradient(circle at 28% 28%, #fff8e1, #ffcc80, #e65100, #bf360c);
+  box-shadow: inset -25px -15px 40px rgba(0,0,0,.5), 0 0 60px rgba(255,204,128,.15);
+}
+.planet-earth {
+  background: radial-gradient(circle at 28% 28%, #81d4fa, #5dade2, #27ae60, #1a5276);
+  box-shadow: inset -25px -15px 40px rgba(0,0,0,.5), 0 0 80px rgba(93,173,226,.18);
+}
+.planet-mars {
+  background: radial-gradient(circle at 28% 28%, #ef5350, #c0392b, #922b21, #641e16);
+  box-shadow: inset -25px -15px 40px rgba(0,0,0,.6), 0 0 50px rgba(239,83,80,.15);
+}
+.planet-jupiter {
+  background: radial-gradient(circle at 28% 28%, #ffe0b2, #f0c27f, #d4a24e, #8b5e3c);
+  box-shadow: inset -25px -15px 40px rgba(0,0,0,.5), 0 0 60px rgba(240,194,127,.12);
+}
+.planet-saturn {
+  background: radial-gradient(circle at 28% 28%, #fff3e0, #ffe0b2, #daa520, #b8860b);
+  box-shadow: inset -25px -15px 40px rgba(0,0,0,.5), 0 0 60px rgba(218,165,32,.15);
+}
+.planet-uranus {
+  background: radial-gradient(circle at 28% 28%, #e0f7fa, #80deea, #26c6da, #00838f);
+  box-shadow: inset -25px -15px 40px rgba(0,0,0,.5), 0 0 60px rgba(128,222,234,.15);
+}
+.planet-neptune {
+  background: radial-gradient(circle at 28% 28%, #4fc3f7, #1e88e5, #1565c0, #0d47a1);
+  box-shadow: inset -25px -15px 40px rgba(0,0,0,.5), 0 0 70px rgba(79,195,247,.18);
+}
+.saturn-ring {
+  position: absolute; top: 50%; left: 50%;
+  width: 160%; height: 32%;
+  border: 3px solid rgba(218,165,32,.25);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotateX(72deg);
+  pointer-events: none;
+}
+.saturn-ring::after {
+  content: ''; position: absolute; inset: 6px;
+  border: 2px solid rgba(255,243,224,.12);
+  border-radius: 50%;
+}
+
+/* ── Warp lines ───────────────────────────────────── */
+.warp-line {
+  position: absolute; left: 50%; top: 50%;
+  width: 2px; height: 0;
+  background: linear-gradient(to bottom, transparent, var(--color-nebula-cyan), transparent);
+  transform-origin: top center; opacity: 0;
+}
+
+/* ── Galaxy arms ──────────────────────────────────── */
+.galaxy-arm {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: rgba(179,136,255,.25);
+  border-right-color: rgba(79,195,247,.12);
+  filter: blur(1.5px);
+}
+
+/* ── Constellation SVG ────────────────────────────── */
+.constellation-path {
+  fill: none;
+  stroke: var(--color-nebula-blue);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+.constellation-star {
+  fill: var(--color-star-white);
+  opacity: 0;
+}
+
+/* ── Horizontal gallery ───────────────────────────── */
+.gallery-card-bg {
+  background: linear-gradient(135deg,
+    hsl(var(--card-hue, 220) 60% 10%) 0%,
+    hsl(var(--card-hue, 220) 80% 4%) 100%
+  );
+  border: 1px solid hsla(var(--card-hue, 220) 50% 30% / 0.3);
+  transition: transform .5s cubic-bezier(.23,1,.32,1), box-shadow .5s;
+}
+.gallery-card-bg:hover {
+  transform: scale(1.06) !important;
+  box-shadow: 0 0 60px hsla(var(--card-hue, 220) 60% 50% / 0.25);
+}
+
+/* ── Scroll arrows ────────────────────────────────── */
+.scroll-arrow {
+  width: 12px; height: 12px;
+  border-right: 2px solid var(--color-nebula-blue);
+  border-bottom: 2px solid var(--color-nebula-blue);
+  transform: rotate(45deg);
+  opacity: 0;
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+.scroll-arrow:nth-child(2) { animation-delay: .15s; }
+.scroll-arrow:nth-child(3) { animation-delay: .3s; }
+@keyframes arrowPulse {
+  0%, 20%, 100% { opacity: 0; transform: rotate(45deg) translateY(-5px); }
+  50% { opacity: 1; transform: rotate(45deg) translateY(5px); }
+}
+
+/* ── Spin animation for orbit rings ──────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Reveal word (Brutalist) ──────────────────────── */
+.reveal-char-brutal {
+  display: inline-block;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+  transition: color 0.1s ease, -webkit-text-stroke 0.1s ease, background-color 0.1s ease;
+}
+.reveal-char-brutal.lit {
+  color: #ffffff;
+  -webkit-text-stroke: 1px transparent;
+}
+.reveal-char-brutal.highlight-brutal {
+  background-color: var(--color-nebula-cyan);
+  color: #000000;
+  -webkit-text-stroke: 1px transparent;
+  padding: 0 2px;
+}
+
+/* ── Section divider ──────────────────────────────── */
+.section-divider {
+  width: 80px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-nebula-purple), transparent);
+}
+
+/* ── Floating particle (used in multiple sections) ── */
+.float-particle {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: var(--color-nebula-cyan);
+  opacity: 0.4;
+}
+
+/* ── Motion path orbit dots ───────────────────────── */
+.orbit-dot {
+  position: absolute; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--color-nebula-cyan);
+  box-shadow: 0 0 10px rgba(79,195,247,0.5);
+}
+
+/* ── Number counter ───────────────────────────────── */
+.counter-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Flip card ────────────────────────────────────── */
+.flip-container { perspective: 1000px; }
+.flip-inner {
+  transition: transform 0.8s cubic-bezier(.4,0,.2,1);
+  transform-style: preserve-3d;
+}
+.flip-inner.flipped { transform: rotateY(180deg); }
+.flip-front, .flip-back {
+  backface-visibility: hidden; position: absolute; inset: 0;
+}
+.flip-back { transform: rotateY(180deg); }
